@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useState, ReactNode } from
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Language, t, BRANDS } from '../constants';
 import { CartItem, ContactSettings, User, Phone, Category } from '../types';
-import { fetchPhones, fetchCategories } from '../services/api';
+import { fetchPhones, fetchCategories, getCurrentUser } from '../services/api';
 import { DEFAULT_CONTACT_SETTINGS, loadContactSettings } from '../services/settingsService';
 
 interface AppContextType {
@@ -45,6 +45,10 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     (async () => {
       try {
+        try {
+          const savedUser = await getCurrentUser();
+          if (savedUser) setUser(savedUser);
+        } catch {}
         let cloudPhones: Phone[] = [];
         try {
           cloudPhones = await fetchPhones();
