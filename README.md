@@ -24,7 +24,7 @@ Easy Buy & Sell Phone App for Android & iOS
 
 ---
 
-## 🚀 Yadda za ka gudanar (How to Run)
+## 🚀 Yadda za ka gudanar da Expo Go (How to Run)
 
 ### 1. Shiga folder
 ```bash
@@ -38,7 +38,7 @@ npm install
 
 ### 3. Fara app
 ```bash
-npx expo start
+npx expo start --tunnel -c
 ```
 
 ### 4. Gwada a wayarka
@@ -95,7 +95,7 @@ EasyPhoneMarket/
 
 ## 🛠 Tech Stack
 
-- Expo SDK 57 + React Native
+- Expo SDK 54 + React Native 0.81
 - TypeScript
 - React Navigation 7
 - Firebase (Auth, Firestore, Storage)
@@ -114,3 +114,20 @@ EasyPhoneMarket/
 ---
 
 Made with ❤️ for the Nigerian phone market
+
+
+## 📱 Muhimmin bayani game da Expo Go
+
+Wannan version an daidaita shi da **Expo SDK 54** domin amfani da **Expo Go a physical Android/iPhone**. A lokacin sauyin SDK 57, Expo docs suna ba da shawarar SDK 54 idan ana son amfani da Expo Go a physical device.
+
+A Codespaces:
+```bash
+npm install
+npx expo start --tunnel -c
+```
+
+Sai a scan sabon QR code daga Expo Go.
+
+## 🏗️ Production / Play Store
+
+An saka `eas.json` domin daga baya a iya gina APK ko AAB ta Expo Application Services. Wannan ba ya hana amfani da Expo Go wajen testing.
