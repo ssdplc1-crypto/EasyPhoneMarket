@@ -100,9 +100,10 @@ export default function ChatScreen() {
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
           <Text style={styles.backText}>←</Text>
         </TouchableOpacity>
+        <View style={styles.adminAvatar}><Text style={styles.adminAvatarText}>F</Text></View>
         <View style={{ flex: 1 }}>
           <Text style={styles.headerName} numberOfLines={1}>{otherUserName}</Text>
-          <Text style={styles.headerSub} numberOfLines={1}>{phoneTitle}</Text>
+          <Text style={styles.online}>● Online · {phoneTitle}</Text>
         </View>
       </View>
 
@@ -168,10 +169,9 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: COLORS.black,
   },
-  headerSub: {
-    fontSize: 12,
-    color: COLORS.gray,
-  },
+  online: { fontSize: 11, color: '#16A34A', marginTop: 2 },
+  adminAvatar: { width: 40, height: 40, borderRadius: 12, backgroundColor: '#EFF6FF', alignItems: 'center', justifyContent: 'center', marginRight: 9 },
+  adminAvatarText: { fontSize: 22, fontWeight: '900', color: COLORS.primary },
   messages: {
     padding: 16,
     paddingBottom: 8,

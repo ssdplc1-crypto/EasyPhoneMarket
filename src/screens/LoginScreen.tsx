@@ -42,24 +42,10 @@ export default function LoginScreen() {
       setUser(user);
       navigation.replace('MainTabs');
     } catch (e: any) {
-      // Fallback mock login
-      if (emailOrPhone.length >= 10) {
-        setUser({
-          id: 'u_guest',
-          name: language === 'ha' ? 'Mai Amfani' : 'User',
-          email: emailOrPhone,
-          phone: emailOrPhone,
-          joinedAt: new Date().toISOString().split('T')[0],
-        });
-        navigation.replace('MainTabs');
-      } else {
-        Alert.alert(
-          language === 'ha' ? 'Kuskure' : 'Error',
-          language === 'ha'
-            ? 'Email/Phone ko password ba daidai ba'
-            : 'Invalid credentials'
-        );
-      }
+      Alert.alert(
+        language === 'ha' ? 'Kuskure' : 'Login failed',
+        e?.message || (language === 'ha' ? 'Bayanan shiga ba daidai ba' : 'Invalid credentials')
+      );
     } finally {
       setLoading(false);
     }
@@ -73,7 +59,7 @@ export default function LoginScreen() {
       >
         <View style={styles.header}>
           <Text style={styles.logo}>📱</Text>
-          <Text style={styles.title}>Easy Phone Market</Text>
+          <Text style={styles.title}>FULATAN COMMUNICATION</Text>
           <Text style={styles.subtitle}>
             {language === 'ha' ? 'Shiga don ci gaba' : 'Login to continue'}
           </Text>

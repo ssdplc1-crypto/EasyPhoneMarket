@@ -20,7 +20,7 @@ import { postPhone } from '../services/firebaseService';
 
 export default function PostPhoneScreen() {
   const navigation = useNavigation();
-  const { phones, setPhones, user, texts, language } = useApp();
+  const { phones, setPhones, user, texts, language, isAdmin } = useApp();
 
   const [title, setTitle] = useState('');
   const [brand, setBrand] = useState<PhoneBrand>('Samsung');
@@ -32,6 +32,18 @@ export default function PostPhoneScreen() {
   const [state, setState] = useState('Kano');
   const [images, setImages] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+
+  if (!user || !isAdmin) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 }}>
+          <Text style={{ fontSize: 46 }}>🔐</Text>
+          <Text style={{ fontSize: 22, fontWeight: '800', color: COLORS.black, marginTop: 12 }}>Admin only</Text>
+          <Text style={{ color: COLORS.gray, textAlign: 'center', marginTop: 8 }}>Admin ne kawai zai iya saka ko sarrafa wayoyi a FULATAN COMMUNICATION.</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   const pickImages = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -121,6 +133,7 @@ export default function PostPhoneScreen() {
           sellerName: user.name,
           sellerPhone: user.phone,
           sellerRating: user.rating || 5,
+          isPublished: true,
         },
         images
       );
