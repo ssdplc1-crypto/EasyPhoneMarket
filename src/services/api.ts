@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Phone, User, Message, ContactSettings, Category } from '../types';
 
-const API_URL = (process.env.EXPO_PUBLIC_API_URL || '').replace(/\/$/, '');
+const API_URL = (process.env.EXPO_PUBLIC_API_URL || 'https://easyphonemarket.onrender.com').replace(/\/$/, '');
 const TOKEN_KEY = '@fulatan_api_token_v1';
 
 export const isApiConfigured = Boolean(API_URL);
@@ -21,6 +21,7 @@ async function request(path:string, options:RequestInit={}){
 export async function registerUser(name:string,email:string,phone:string,password:string):Promise<User>{const d=await request('/api/auth/register',{method:'POST',body:JSON.stringify({name,email,phone,password})});await AsyncStorage.setItem(TOKEN_KEY,d.token);return d.user;}
 export async function loginUser(emailOrPhone:string,password:string):Promise<User>{const d=await request('/api/auth/login',{method:'POST',body:JSON.stringify({emailOrPhone,password})});await AsyncStorage.setItem(TOKEN_KEY,d.token);return d.user;}
 export async function logoutUser(){await AsyncStorage.removeItem(TOKEN_KEY);}
+export async function getCurrentUser():Promise<User|null>{try{const t=await token();if(!t)return null;const d=await request('/api/me');return d.user||null;}catch{await AsyncStorage.removeItem(TOKEN_KEY);return null;}}
 export async function fetchPhones():Promise<Phone[]>{return request('/api/phones');}
 export async function fetchCategories():Promise<Category[]>{return request('/api/categories');}
 export async function fetchAllPhonesAdmin():Promise<Phone[]>{return request('/api/admin/phones');}
