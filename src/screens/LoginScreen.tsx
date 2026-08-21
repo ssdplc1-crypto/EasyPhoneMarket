@@ -17,6 +17,7 @@ import { RootStackParamList } from '../types';
 import { COLORS } from '../constants';
 import { useApp } from '../context/AppContext';
 import { loginUser } from '../services/firebaseService';
+import { isFirebaseConfigured } from '../services/firebase';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 
@@ -58,11 +59,12 @@ export default function LoginScreen() {
         style={styles.inner}
       >
         <View style={styles.header}>
-          <Text style={styles.logo}>📱</Text>
+          <View style={styles.logoBox}><Text style={styles.logoF}>F</Text><View style={styles.logoDot}/></View>
           <Text style={styles.title}>FULATAN COMMUNICATION</Text>
           <Text style={styles.subtitle}>
             {language === 'ha' ? 'Shiga don ci gaba' : 'Login to continue'}
           </Text>
+          {!isFirebaseConfigured && <View style={styles.demo}><Text style={styles.demoTitle}>Demo Admin</Text><Text style={styles.demoText}>admin@fulatan.com • any password</Text></View>}
         </View>
 
         <View style={styles.form}>
@@ -130,7 +132,7 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.background,
   },
   inner: {
     flex: 1,
@@ -141,15 +143,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 40,
   },
-  logo: {
-    fontSize: 56,
-    marginBottom: 12,
-  },
+  logoBox: { width: 86, height: 86, borderRadius: 26, backgroundColor: COLORS.navy, alignItems: 'center', justifyContent: 'center', marginBottom: 14, shadowColor: COLORS.primary, shadowOpacity: .22, shadowRadius: 16, elevation: 7 },
+  logoF: { fontSize: 56, fontWeight: '900', color: '#60A5FA' },
+  logoDot: { position: 'absolute', right: 9, bottom: 9, width: 11, height: 11, borderRadius: 6, backgroundColor: COLORS.accent },
   title: {
     fontSize: 26,
     fontWeight: '800',
     color: COLORS.black,
   },
+  demo: { backgroundColor: '#EAF1FF', borderRadius: 12, paddingHorizontal: 12, paddingVertical: 8, marginTop: 12, borderWidth: 1, borderColor: '#C6D6FF' },
+  demoTitle: { fontSize: 10, color: COLORS.primary, fontWeight: '900', textAlign: 'center' },
+  demoText: { fontSize: 9, color: COLORS.gray, fontWeight: '700', marginTop: 2 },
   subtitle: {
     fontSize: 15,
     color: COLORS.gray,
@@ -165,14 +169,15 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   input: {
-    backgroundColor: COLORS.background,
-    borderRadius: 12,
+    backgroundColor: COLORS.white,
+    borderRadius: 15,
     paddingHorizontal: 16,
     paddingVertical: 14,
     fontSize: 16,
     marginBottom: 16,
     borderWidth: 1,
     borderColor: COLORS.border,
+    fontWeight: '700',
     color: COLORS.black,
   },
   button: {

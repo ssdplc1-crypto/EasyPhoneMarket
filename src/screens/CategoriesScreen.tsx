@@ -1,15 +1,17 @@
-import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, FlatList, TouchableOpacity, Image } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { BRANDS, COLORS } from '../constants';
-import { RootStackParamList } from '../types';
-import { useApp } from '../context/AppContext';
-
-type Nav = NativeStackNavigationProp<RootStackParamList>;
+import React,{useMemo} from 'react';
+import {View,Text,StyleSheet,SafeAreaView,FlatList,TouchableOpacity,Image} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {BRANDS,COLORS} from '../constants';
+import {RootStackParamList} from '../types';
+import {useApp} from '../context/AppContext';
+const icons:Record<string,string>={Apple:'',Samsung:'S',Tecno:'T',Infinix:'I',Xiaomi:'X',Oppo:'O',Vivo:'V',Huawei:'H',Nokia:'N',Other:'•••'};
 export default function CategoriesScreen(){
- const navigation=useNavigation<Nav>(); const {phones}=useApp();
- return <SafeAreaView style={styles.container}><View style={styles.header}><TouchableOpacity onPress={()=>navigation.goBack()}><Text style={styles.back}>‹</Text></TouchableOpacity><Text style={styles.title}>Categories</Text><View style={{width:32}}/></View>
- <FlatList data={BRANDS} numColumns={2} keyExtractor={x=>x} contentContainerStyle={styles.grid} renderItem={({item})=>{const p=phones.find(x=>x.brand===item);const count=phones.filter(x=>x.brand===item).length;return <TouchableOpacity style={styles.card} onPress={()=>navigation.navigate('Home')}><View style={styles.pic}>{p?.images?.[0]?<Image source={{uri:p.images[0]}} style={styles.image}/>:<Text style={styles.emoji}>📱</Text>}</View><Text style={styles.brand}>{item}</Text><Text style={styles.count}>{count} items</Text></TouchableOpacity>}}/></SafeAreaView>
+ const navigation=useNavigation<NativeStackNavigationProp<RootStackParamList>>(); const {phones,language}=useApp();
+ const available=useMemo(()=>BRANDS.filter(b=>phones.some(p=>p.brand===b)),[phones]);
+ return <SafeAreaView style={styles.container}><View style={styles.header}><TouchableOpacity style={styles.back} onPress={()=>navigation.goBack()}><Text style={styles.backText}>‹</Text></TouchableOpacity><View><Text style={styles.kicker}>FULATAN</Text><Text style={styles.title}>Categories</Text></View><View style={{width:42}}/></View>
+ <FlatList data={available} numColumns={2} keyExtractor={x=>x} contentContainerStyle={styles.grid} showsVerticalScrollIndicator={false} ListEmptyComponent={<View style={styles.empty}><View style={styles.emptyLogo}><Text style={styles.emptyF}>F</Text></View><Text style={styles.emptyTitle}>{language==='ha'?'Babu category tukuna':'No categories yet'}</Text><Text style={styles.emptySub}>{language==='ha'?'Categories za bayyana ne bayan Admin ya saka waya.':'Categories appear only after the Admin publishes phones.'}</Text></View>} renderItem={({item})=>{const p=phones.find(x=>x.brand===item);const count=phones.filter(x=>x.brand===item).length;return <TouchableOpacity style={styles.card} activeOpacity={.9} onPress={()=>navigation.navigate('Home')}><View style={styles.pic}>{p?.images?.[0]?<Image source={{uri:p.images[0]}} style={styles.image}/>:<View style={styles.iconBox}><Text style={styles.icon}>{icons[item]}</Text></View>}</View><Text style={styles.brand}>{item}</Text><Text style={styles.count}>{count} {count===1?'item':'items'}</Text></TouchableOpacity>}}/>
+ </SafeAreaView>
 }
-const styles=StyleSheet.create({container:{flex:1,backgroundColor:'#F7F9FC'},header:{height:62,backgroundColor:'#fff',flexDirection:'row',alignItems:'center',justifyContent:'space-between',paddingHorizontal:18,borderBottomWidth:1,borderBottomColor:'#E8EDF4'},back:{fontSize:36,color:COLORS.black,lineHeight:36},title:{fontSize:20,fontWeight:'900',color:COLORS.black},grid:{padding:14},card:{flex:1,backgroundColor:'#fff',borderRadius:18,margin:7,padding:12,borderWidth:1,borderColor:'#E7ECF3'},pic:{height:125,borderRadius:14,backgroundColor:'#F1F5F9',overflow:'hidden',alignItems:'center',justifyContent:'center'},image:{width:'100%',height:'100%'},emoji:{fontSize:48},brand:{fontSize:15,fontWeight:'900',marginTop:10,color:COLORS.black},count:{fontSize:11,color:COLORS.gray,marginTop:3}});
+const styles=StyleSheet.create({container:{flex:1,backgroundColor:COLORS.background},header:{backgroundColor:COLORS.navy,paddingHorizontal:16,paddingVertical:14,flexDirection:'row',alignItems:'center',justifyContent:'space-between'},back:{width:42,height:42,borderRadius:14,backgroundColor:COLORS.navy2,alignItems:'center',justifyContent:'center'},backText:{fontSize:34,color:'#fff',lineHeight:35},kicker:{fontSize:9,color:'#93C5FD',fontWeight:'900',letterSpacing:2,textAlign:'center'},title:{fontSize:21,fontWeight:'900',color:'#fff',marginTop:1},grid:{padding:9,paddingBottom:30},card:{flex:1,backgroundColor:'#fff',borderRadius:20,margin:7,padding:10,borderWidth:1,borderColor:COLORS.border,elevation:3,shadowColor:'#071225',shadowOpacity:.06,shadowRadius:8},pic:{height:145,borderRadius:15,backgroundColor:'#E4EAF3',overflow:'hidden'},image:{width:'100%',height:'100%'},iconBox:{flex:1,alignItems:'center',justifyContent:'center'},icon:{fontSize:52,fontWeight:'900',color:COLORS.primary},brand:{fontSize:16,fontWeight:'900',marginTop:10,color:COLORS.black},count:{fontSize:11,color:COLORS.gray,marginTop:3,fontWeight:'800'},empty:{alignItems:'center',padding:55},emptyLogo:{width:78,height:78,borderRadius:24,backgroundColor:COLORS.navy,alignItems:'center',justifyContent:'center'},emptyF:{fontSize:46,fontWeight:'900',color:'#60A5FA'},emptyTitle:{fontSize:19,fontWeight:'900',marginTop:14,color:COLORS.black},emptySub:{fontSize:12,color:COLORS.gray,textAlign:'center',lineHeight:18,marginTop:6}}
+);

@@ -38,8 +38,8 @@ export default function PostPhoneScreen() {
       <SafeAreaView style={styles.container}>
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 }}>
           <Text style={{ fontSize: 46 }}>🔐</Text>
-          <Text style={{ fontSize: 22, fontWeight: '800', color: COLORS.black, marginTop: 12 }}>Admin only</Text>
-          <Text style={{ color: COLORS.gray, textAlign: 'center', marginTop: 8 }}>Admin ne kawai zai iya saka ko sarrafa wayoyi a FULATAN COMMUNICATION.</Text>
+          <Text style={{ fontSize: 23, fontWeight: '900', color: COLORS.black, marginTop: 12 }}>Admin Only</Text>
+          <Text style={{ color: COLORS.gray, textAlign: 'center', marginTop: 8, lineHeight: 19 }}>Admin ne kawai zai iya saka ko sarrafa wayoyi. Customers ba za su iya saka waya ba.</Text>
         </View>
       </SafeAreaView>
     );
@@ -106,12 +106,12 @@ export default function PostPhoneScreen() {
       return;
     }
 
-    if (!user) {
+    if (!user || !isAdmin) {
       Alert.alert(
         language === 'ha' ? 'Shiga' : 'Login Required',
         language === 'ha'
-          ? 'Dole ne ka shiga kafin ka saka wayar'
-          : 'You need to login to post a phone'
+          ? 'Admin ne kawai zai iya saka waya.'
+          : 'Only the FULATAN Admin can publish phones.'
       );
       return;
     }
@@ -142,8 +142,8 @@ export default function PostPhoneScreen() {
       Alert.alert(
         language === 'ha' ? 'Nasara!' : 'Success!',
         language === 'ha'
-          ? 'An saka wayarka cikin nasara'
-          : 'Your phone has been posted successfully',
+          ? 'An saka wayar a FULATAN cikin nasara.'
+          : 'Phone published successfully.',
         [{ text: 'OK', onPress: () => navigation.goBack() }]
       );
     } catch (e: any) {
@@ -156,7 +156,7 @@ export default function PostPhoneScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.pageTitle}>{texts.postPhone}</Text>
+        <View style={styles.titleRow}><View><Text style={styles.kicker}>FULATAN ADMIN</Text><Text style={styles.pageTitle}>{texts.postPhone}</Text></View><View style={styles.secure}><Text style={styles.secureText}>SECURE</Text></View></View><View style={styles.notice}><Text style={styles.noticeTitle}>🛡 Admin Publishing</Text><Text style={styles.noticeText}>{language==='ha'?'Wayar da ka saka za ta bayyana ga customers ne kawai bayan Admin ya wallafa ta.':'Only the FULATAN Admin can publish phones for customers to see.'}</Text></View>
 
         {/* Image Picker */}
         <Text style={styles.label}>{texts.uploadPhotos}</Text>
@@ -310,9 +310,16 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingBottom: 40,
   },
+  titleRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
+  kicker: { fontSize: 9, color: COLORS.primary, fontWeight: '900', letterSpacing: 2, marginBottom: 3 },
+  secure: { backgroundColor: '#DCFCE7', paddingHorizontal: 10, paddingVertical: 7, borderRadius: 12 },
+  secureText: { color: '#166534', fontSize: 8, fontWeight: '900' },
+  notice: { backgroundColor: '#EAF1FF', borderWidth: 1, borderColor: '#C6D6FF', borderRadius: 15, padding: 12, marginBottom: 8 },
+  noticeTitle: { fontSize: 12, fontWeight: '900', color: COLORS.primary },
+  noticeText: { fontSize: 10, color: COLORS.gray, lineHeight: 16, marginTop: 4, fontWeight: '600' },
   pageTitle: {
     fontSize: 22,
-    fontWeight: '800',
+    fontWeight: '900',
     color: COLORS.black,
     marginBottom: 20,
   },

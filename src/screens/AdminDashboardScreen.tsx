@@ -6,10 +6,11 @@ import { useApp } from '../context/AppContext';
 import { saveContactSettings } from '../services/settingsService';
 import { deletePhone,setPhonePublished,fetchAllPhonesAdmin } from '../services/firebaseService';
 import { formatPrice } from '../services/mockData';
+import { isFirebaseConfigured } from '../services/firebase';
 
 export default function AdminDashboardScreen(){
  const navigation=useNavigation<any>();const {user,phones,setPhones,contactSettings,setContactSettings}=useApp();const [phone,setPhone]=useState(contactSettings.phone);const [whatsapp,setWhatsapp]=useState(contactSettings.whatsapp);const [chat,setChat]=useState(contactSettings.chatEnabled);const [call,setCall]=useState(contactSettings.callEnabled);const [wa,setWa]=useState(contactSettings.whatsappEnabled);const [saving,setSaving]=useState(false);
- useEffect(()=>{if(user?.role==='admin')fetchAllPhonesAdmin().then(setPhones).catch(()=>{})},[user?.role]);
+ useEffect(()=>{if(user?.role==='admin' && isFirebaseConfigured)fetchAllPhonesAdmin().then(setPhones).catch(()=>{})},[user?.role]);
  if(!user||user.role!=='admin')return <SafeAreaView style={styles.denied}><Text style={{fontSize:55}}>🔐</Text><Text style={styles.deniedTitle}>Admin Access Only</Text><Text style={styles.deniedSub}>Wannan shafin na FULATAN Admin ne kawai.</Text></SafeAreaView>;
  const save=async()=>{setSaving(true);try{const next={...contactSettings,phone:phone.trim(),whatsapp:whatsapp.trim(),chatEnabled:chat,callEnabled:call,whatsappEnabled:wa,updatedAt:new Date().toISOString()};await saveContactSettings(next);setContactSettings(next);Alert.alert('Saved','Contact controls updated successfully.')}catch(e:any){Alert.alert('Error',e?.message||'Could not save')}finally{setSaving(false)}};
  const remove=(id:string)=>Alert.alert('Delete product','This action is for Admin only.',[{text:'Cancel',style:'cancel'},{text:'Delete',style:'destructive',onPress:async()=>{try{await deletePhone(id);setPhones(phones.filter(p=>p.id!==id))}catch(e:any){Alert.alert('Error',e?.message||'Delete failed')}}}]);
