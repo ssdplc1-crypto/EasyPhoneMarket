@@ -34,7 +34,7 @@ function ProductCard({ phone, onPress }: { phone: Phone; onPress: () => void }) 
 
 export default function HomeScreen() {
   const navigation = useNavigation<Nav>();
-  const { phones, language, setLanguage, cartCount, user } = useApp();
+  const { phones, categories, language, setLanguage, cartCount, user } = useApp();
   const [search, setSearch] = useState('');
   const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
 
@@ -44,10 +44,7 @@ export default function HomeScreen() {
     return matchesSearch && (!selectedBrand || p.brand === selectedBrand);
   }), [phones, search, selectedBrand]);
 
-  const categories = useMemo(
-    () => BRANDS.filter((b) => phones.some((p) => p.brand === b)),
-    [phones]
-  );
+  const categoryNames = useMemo(() => categories.map((c) => c.name), [categories]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -84,9 +81,9 @@ export default function HomeScreen() {
             </View>
 
             <View style={styles.sectionHeader}><Text style={styles.sectionTitle}>{language === 'ha' ? 'Categories' : 'Categories'}</Text><TouchableOpacity onPress={() => navigation.navigate('Categories')}><Text style={styles.seeAll}>See All</Text></TouchableOpacity></View>
-            {categories.length > 0 ? (
+            {categoryNames.length > 0 ? (
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.categoryScroll}>
-                {categories.map((b) => <TouchableOpacity key={b} style={styles.category} onPress={() => { setSelectedBrand(b); setSearch(''); }}><View style={styles.categoryIcon}><Text style={styles.categoryGlyph}>{brandIcon[b] || '•'}</Text></View><Text style={styles.categoryText}>{b}</Text></TouchableOpacity>)}
+                {categoryNames.map((b) => <TouchableOpacity key={b} style={styles.category} onPress={() => { setSelectedBrand(b); setSearch(''); }}><View style={styles.categoryIcon}><Text style={styles.categoryGlyph}>{brandIcon[b] || b.charAt(0).toUpperCase()}</Text></View><Text style={styles.categoryText}>{b}</Text></TouchableOpacity>)}
               </ScrollView>
             ) : (
               <View style={styles.noCategory}><Text style={styles.noCategoryText}>{language === 'ha' ? 'Babu category tukuna' : 'No categories yet'}</Text></View>
