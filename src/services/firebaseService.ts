@@ -13,6 +13,7 @@ import {
   getDocs,
   addDoc,
   updateDoc,
+  deleteDoc,
   query,
   where,
   orderBy,
@@ -43,6 +44,7 @@ export async function registerUser(
       joinedAt: new Date().toISOString().split('T')[0],
       rating: 5,
       totalSales: 0,
+      role: 'user',
     };
     return user;
   }
@@ -58,6 +60,7 @@ export async function registerUser(
     joinedAt: new Date().toISOString().split('T')[0],
     rating: 5,
     totalSales: 0,
+    role: 'user',
   };
 
   await setDoc(doc(db, 'users', cred.user.uid), userData);
@@ -74,7 +77,9 @@ export async function loginUser(email: string, password: string): Promise<User> 
   const cred = await signInWithEmailAndPassword(auth, email, password);
   const snap = await getDoc(doc(db, 'users', cred.user.uid));
   if (snap.exists()) {
-    return snap.data() as User;
+    const token = await cred.user.getIdTokenResult();
+    const isAdmin = token.claims.admin === true;
+    return { ...snap.data(), role: isAdmin ? 'admin' : 'user' } as User;
   }
   throw new Error('User profile not found');
 }
@@ -92,6 +97,13 @@ export async function fetchPhones(): Promise<Phone[]> {
     return mockPhones;
   }
 
+  const q = query(collection(db, 'phones'), where('isPublished', '==', true));
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Phone)).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+}
+
+export async function fetchAllPhonesAdmin(): Promise<Phone[]> {
+  if (!isFirebaseConfigured) return mockPhones;
   const q = query(collection(db, 'phones'), orderBy('createdAt', 'desc'));
   const snapshot = await getDocs(q);
   return snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Phone));
@@ -119,6 +131,7 @@ export async function postPhone(
     images: imageUrls,
     createdAt: new Date().toISOString().split('T')[0],
     views: 0,
+    isPublished: true,
   };
 
   if (!isFirebaseConfigured) {
@@ -135,6 +148,16 @@ async function uploadImage(uri: string, path: string): Promise<string> {
   const storageRef = ref(storage, path);
   await uploadBytes(storageRef, blob);
   return getDownloadURL(storageRef);
+}
+
+export async function deletePhone(phoneId: string): Promise<void> {
+  if (!isFirebaseConfigured) return;
+  await deleteDoc(doc(db, 'phones', phoneId));
+}
+
+export async function setPhonePublished(phoneId: string, isPublished: boolean): Promise<void> {
+  if (!isFirebaseConfigured) return;
+  await updateDoc(doc(db, 'phones', phoneId), { isPublished });
 }
 
 // ==================== CHAT ====================
