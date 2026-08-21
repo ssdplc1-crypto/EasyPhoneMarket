@@ -1,16 +1,10 @@
 export type PhoneCondition = 'New' | 'Like New' | 'Good' | 'Fair';
 
 export type PhoneBrand =
-  | 'Apple'
-  | 'Samsung'
-  | 'Tecno'
-  | 'Infinix'
-  | 'Xiaomi'
-  | 'Oppo'
-  | 'Vivo'
-  | 'Huawei'
-  | 'Nokia'
-  | 'Other';
+  | 'Apple' | 'Samsung' | 'Tecno' | 'Infinix' | 'Xiaomi'
+  | 'Oppo' | 'Vivo' | 'Huawei' | 'Nokia' | 'Other';
+
+export type UserRole = 'user' | 'admin';
 
 export interface Phone {
   id: string;
@@ -30,6 +24,7 @@ export interface Phone {
   createdAt: string;
   isFavorite?: boolean;
   views?: number;
+  isPublished?: boolean;
 }
 
 export interface User {
@@ -42,6 +37,12 @@ export interface User {
   rating?: number;
   totalSales?: number;
   joinedAt: string;
+  role?: UserRole;
+}
+
+export interface CartItem {
+  phoneId: string;
+  quantity: number;
 }
 
 export interface Message {
@@ -64,6 +65,16 @@ export interface Chat {
   unreadCount: number;
 }
 
+export interface ContactSettings {
+  phone: string;
+  whatsapp: string;
+  chatEnabled: boolean;
+  callEnabled: boolean;
+  whatsappEnabled: boolean;
+  supportLabel: string;
+  updatedAt: string;
+}
+
 export type RootStackParamList = {
   MainTabs: undefined;
   Login: undefined;
@@ -75,12 +86,17 @@ export type RootStackParamList = {
   SellerProfile: { sellerId: string };
   Search: undefined;
   Favorites: undefined;
+  Categories: undefined;
+  Cart: undefined;
+  Checkout: undefined;
+  Orders: undefined;
+  AdminDashboard: undefined;
 };
 
 export type MainTabParamList = {
   Home: undefined;
-  Search: undefined;
-  Sell: undefined;
+  Categories: undefined;
+  Cart: undefined;
   Favorites: undefined;
   Profile: undefined;
 };
