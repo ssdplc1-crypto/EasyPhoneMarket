@@ -6,6 +6,12 @@ export type PhoneBrand =
 
 export type UserRole = 'user' | 'admin';
 
+export interface Category {
+  id: string;
+  name: string;
+  slug: string;
+}
+
 export interface Phone {
   id: string;
   title: string;
