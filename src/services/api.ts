@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Phone, User, Message, ContactSettings } from '../types';
+import { Phone, User, Message, ContactSettings, Category } from '../types';
 
 const API_URL = (process.env.EXPO_PUBLIC_API_URL || '').replace(/\/$/, '');
 const TOKEN_KEY = '@fulatan_api_token_v1';
@@ -22,6 +22,7 @@ export async function registerUser(name:string,email:string,phone:string,passwor
 export async function loginUser(emailOrPhone:string,password:string):Promise<User>{const d=await request('/api/auth/login',{method:'POST',body:JSON.stringify({emailOrPhone,password})});await AsyncStorage.setItem(TOKEN_KEY,d.token);return d.user;}
 export async function logoutUser(){await AsyncStorage.removeItem(TOKEN_KEY);}
 export async function fetchPhones():Promise<Phone[]>{return request('/api/phones');}
+export async function fetchCategories():Promise<Category[]>{return request('/api/categories');}
 export async function fetchAllPhonesAdmin():Promise<Phone[]>{return request('/api/admin/phones');}
 export async function postPhone(phoneData:Omit<Phone,'id'|'createdAt'|'views'>,imageUris:string[]):Promise<Phone>{const form=new FormData();Object.entries({...phoneData,images:undefined}).forEach(([k,v])=>{if(k!=='images'&&v!==undefined)form.append(k,String(v));});for(const uri of imageUris){const name=uri.split('/').pop()||`phone-${Date.now()}.jpg`;form.append('images',{uri,name,type:'image/jpeg'} as any);}return request('/api/phones',{method:'POST',body:form});}
 export async function deletePhone(id:string){await request(`/api/phones/${id}`,{method:'DELETE'});}
