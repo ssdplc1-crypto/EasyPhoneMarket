@@ -1,0 +1,55 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function isAdmin() { return signedIn() && request.auth.token.admin == true; }
+
+    match /users/{userId} {
+      allow read: if signedIn() && (request.auth.uid == userId || isAdmin());
+      allow create: if signedIn() && request.auth.uid == userId;
+      allow update: if signedIn() && request.auth.uid == userId
+        && request.resource.data.role == resource.data.role;
+      allow delete: if isAdmin();
+    }
+
+    match /phones/{phoneId} {
+      allow read: if resource.data.isPublished != false || isAdmin();
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /appConfig/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /chats/{chatId} {
+      allow read, update: if signedIn()
+        && (resource.data.buyerId == request.auth.uid
+        || resource.data.sellerId == request.auth.uid
+        || isAdmin());
+      allow create: if signedIn()
+        && request.resource.data.buyerId == request.auth.uid;
+
+      match /messages/{messageId} {
+        allow read, create: if signedIn()
+          && (get(/databases/$(database)/documents/chats/$(chatId)).data.buyerId == request.auth.uid
+          || get(/databases/$(database)/documents/chats/$(chatId)).data.sellerId == request.auth.uid
+          || isAdmin());
+        allow update: if isAdmin();
+        allow delete: if isAdmin();
+      }
+    }
+
+    match /orders/{orderId} {
+      allow read: if signedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if signedIn() && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if isAdmin();
+    }
+
+    match /payments/{paymentId} {
+      allow read: if isAdmin() || (signedIn() && resource.data.userId == request.auth.uid);
+      allow create: if signedIn() && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if isAdmin();
+    }
+  }
+}

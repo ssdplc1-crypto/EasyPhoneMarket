@@ -1,133 +1,37 @@
-# Easy Phone Market 📱
+# FULATAN COMMUNICATION
 
-**App na sayen da sayar da wayoyi cikin sauƙi**  
-Easy Buy & Sell Phone App for Android & iOS
+Buy · Sell · Upgrade — Expo Go mobile marketplace for phones and accessories.
 
----
+## Current app design
+- FULATAN COMMUNICATION branded home screen
+- Search, brand categories and hot deals
+- Product details with admin-controlled Call, WhatsApp and Chat
+- Cart and secure checkout flow
+- Favorites and profile
+- Admin-only product management
+- Admin contact controls for Call / WhatsApp / Live Chat
+- Admin dashboard with products, contact controls, activity overview and security notes
+- Firebase Auth / Firestore / Storage integration hooks
+- Expo SDK 54 so the project remains compatible with the Expo Go setup already tested on the target Android phone
 
-## ✅ Features (Duka)
+## Admin security
+The mobile UI is not the security boundary. Production admin access must be granted with Firebase Authentication custom claims (`admin: true`). Firestore and Storage rules in this project check the claim before allowing admin writes.
 
-| Feature | Status |
-|---------|--------|
-| Home + Search + Brand Filter | ✅ |
-| Phone Details | ✅ |
-| Call Seller | ✅ |
-| WhatsApp Seller | ✅ |
-| **In-App Chat** | ✅ |
-| Post Phone for Sale | ✅ |
-| **Upload Photos (Camera + Gallery)** | ✅ |
-| Favorites / Wishlist | ✅ |
-| Login & Register | ✅ |
-| **Firebase Ready** (Auth + Firestore + Storage) | ✅ |
-| Profile + Language Switch (Hausa/English) | ✅ |
-| Modern UI | ✅ |
+Do not put Flutterwave secret keys, Firebase Admin SDK credentials, service-account JSON, or admin passwords inside the Expo app.
 
----
+## Start
 
-## 🚀 Yadda za ka gudanar da Expo Go (How to Run)
-
-### 1. Shiga folder
-```bash
-cd EasyPhoneMarket
-```
-
-### 2. Install packages
-```bash
-npm install
-```
-
-### 3. Fara app
-```bash
-npx expo start --tunnel -c
-```
-
-### 4. Gwada a wayarka
-- Sauke **Expo Go** daga Play Store ko App Store
-- Scan QR code
-
----
-
-## 🔥 Yadda za ka haɗa Firebase (Optional amma Recommended)
-
-1. Je ka → [Firebase Console](https://console.firebase.google.com)
-2. Create Project → **EasyPhoneMarket**
-3. Add App (Android + iOS)
-4. Enable:
-   - **Authentication** → Email/Password
-   - **Firestore Database**
-   - **Storage**
-5. Buɗe file: `src/services/firebase.ts`
-6. Paste config ɗinka:
-
-```js
-const firebaseConfig = {
-  apiKey: "AIza...",
-  authDomain: "your-project.firebaseapp.com",
-  projectId: "your-project",
-  storageBucket: "your-project.appspot.com",
-  messagingSenderId: "123456",
-  appId: "1:123456:web:abc"
-};
-```
-
-7. Restart app → Real login, database, and image upload will work!
-
-> **Note:** Without Firebase config, the app still works perfectly with **Mock Data**.
-
----
-
-## 📁 Project Structure
-
-```
-EasyPhoneMarket/
-├── App.tsx
-├── src/
-│   ├── components/     → PhoneCard
-│   ├── constants/      → Colors, Brands, Translations
-│   ├── context/        → App state (language, user, favorites)
-│   ├── navigation/     → Stack + Tabs
-│   ├── screens/        → All screens
-│   ├── services/       → Firebase + Mock data
-│   └── types/          → TypeScript types
-```
-
----
-
-## 🛠 Tech Stack
-
-- Expo SDK 54 + React Native 0.81
-- TypeScript
-- React Navigation 7
-- Firebase (Auth, Firestore, Storage)
-- Expo Image Picker
-
----
-
-## Next Improvements (Optional)
-
-- [ ] Push Notifications
-- [ ] Commission / Payment system
-- [ ] Seller ratings & reviews
-- [ ] Admin panel
-- [ ] Location-based search (nearby)
-
----
-
-Made with ❤️ for the Nigerian phone market
-
-
-## 📱 Muhimmin bayani game da Expo Go
-
-Wannan version an daidaita shi da **Expo SDK 54** domin amfani da **Expo Go a physical Android/iPhone**. A lokacin sauyin SDK 57, Expo docs suna ba da shawarar SDK 54 idan ana son amfani da Expo Go a physical device.
-
-A Codespaces:
 ```bash
 npm install
 npx expo start --tunnel -c
 ```
 
-Sai a scan sabon QR code daga Expo Go.
+Scan the QR code with the compatible Expo Go app.
 
-## 🏗️ Production / Play Store
+## Firebase
+Copy `.env.example` to `.env` and add the Expo public Firebase configuration. Then deploy `firestore.rules` and `storage.rules` from a trusted development environment.
 
-An saka `eas.json` domin daga baya a iya gina APK ko AAB ta Expo Application Services. Wannan ba ya hana amfani da Expo Go wajen testing.
+For real production administration, create the first admin through a trusted backend/Cloud Function that sets the Firebase custom claim. Never let the client app assign its own admin claim.
+
+## Payments
+Checkout is prepared for a secure Flutterwave backend integration. Keep Flutterwave secret keys on the server only.
