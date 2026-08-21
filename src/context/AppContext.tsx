@@ -2,7 +2,6 @@ import React, { createContext, useContext, useEffect, useState, ReactNode } from
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Language, t } from '../constants';
 import { CartItem, ContactSettings, User, Phone } from '../types';
-import { mockPhones } from '../services/mockData';
 import { fetchPhones } from '../services/firebaseService';
 import { isFirebaseConfigured } from '../services/firebase';
 import { DEFAULT_CONTACT_SETTINGS, loadContactSettings } from '../services/settingsService';
@@ -31,13 +30,13 @@ interface AppContextType {
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
-const PHONES_KEY = '@fulatan_mock_phones_v2';
+const PHONES_KEY = '@fulatan_admin_phones_v3';
 const CART_KEY = '@fulatan_cart_v1';
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [language, setLanguage] = useState<Language>('ha');
   const [user, setUser] = useState<User | null>(null);
-  const [phones, setPhonesState] = useState<Phone[]>(mockPhones);
+  const [phones, setPhonesState] = useState<Phone[]>([]);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [contactSettings, setContactSettingsState] = useState<ContactSettings>(DEFAULT_CONTACT_SETTINGS);
