@@ -41,7 +41,11 @@ export default function LoginScreen() {
     try {
       const user = await loginUser(emailOrPhone, password);
       setUser(user);
-      navigation.replace('MainTabs');
+      if (user.role === 'admin') {
+        navigation.replace('AdminDashboard');
+      } else {
+        navigation.replace('MainTabs');
+      }
     } catch (e: any) {
       Alert.alert(
         language === 'ha' ? 'Kuskure' : 'Login failed',

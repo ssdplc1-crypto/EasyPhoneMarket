@@ -77,7 +77,7 @@ export default function HomeScreen() {
                 <Text style={styles.heroSub}>{language === 'ha' ? 'Wayoyi da Admin ya tabbatar da su.' : 'Only phones uploaded by FULATAN Admin.'}</Text>
                 <TouchableOpacity style={styles.heroBtn} onPress={() => setSelectedBrand(null)}><Text style={styles.heroBtnText}>{language === 'ha' ? 'Duba Wayoyi' : 'Browse Phones'}</Text></TouchableOpacity>
               </View>
-              <View style={styles.heroPhones}><View style={styles.heroPhone}><Text style={styles.heroPhoneText}>F</Text></View><View style={[styles.heroPhone, styles.heroPhone2]}><Text style={styles.heroPhoneText}>F</Text></View></View>
+              <View style={styles.heroVisual}><View style={styles.heroPhone}><Text style={styles.heroPhoneEmoji}>📱</Text><Text style={styles.heroPhoneSpark}>✦</Text></View><View style={[styles.heroPhone, styles.heroPhone2]}><Text style={styles.heroPhoneEmoji}>📲</Text><Text style={styles.heroPhoneSpark}>✦</Text></View></View>
             </View>
 
             <View style={styles.sectionHeader}><Text style={styles.sectionTitle}>{language === 'ha' ? 'Categories' : 'Categories'}</Text><TouchableOpacity onPress={() => navigation.navigate('Categories')}><Text style={styles.seeAll}>See All</Text></TouchableOpacity></View>
@@ -95,7 +95,7 @@ export default function HomeScreen() {
         renderItem={({ item }) => <ProductCard phone={item} onPress={() => navigation.navigate('PhoneDetails', { phoneId: item.id })} />}
         ListEmptyComponent={
           <View style={styles.empty}>
-            <View style={styles.emptyLogo}><Text style={styles.emptyLogoText}>F</Text></View>
+            <View style={styles.emptyLogo}><Text style={styles.emptyLogoText}>🛍️</Text><View style={styles.emptySpark}><Text>✦</Text></View></View>
             <Text style={styles.emptyTitle}>{phones.length === 0 ? (language === 'ha' ? 'Har yanzu babu waya' : 'No phones available yet') : (language === 'ha' ? 'Ba a samu ba' : 'No phones found')}</Text>
             <Text style={styles.emptySub}>{phones.length === 0 ? (language === 'ha' ? 'Admin zai saka wayoyi nan. Da zarar an saka su, customers za su iya ganin su.' : 'The Admin will upload phones here. Customers will see them after they are published.') : (language === 'ha' ? 'Gwada wani search ko category.' : 'Try another search or category.')}</Text>
             {user?.role === 'admin' && phones.length === 0 && <TouchableOpacity style={styles.emptyButton} onPress={() => navigation.navigate('PostPhone')}><Text style={styles.emptyButtonText}>＋ Add First Phone</Text></TouchableOpacity>}
@@ -109,8 +109,8 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   container:{flex:1,backgroundColor:'#E9EEF5'},
-  list:{paddingHorizontal:14,paddingBottom:35},
-  header:{backgroundColor:'#101A2E',marginHorizontal:-14,paddingHorizontal:18,paddingTop:10,paddingBottom:15,flexDirection:'row',justifyContent:'space-between',alignItems:'center'},
+  list:{paddingHorizontal:14,paddingTop:2,paddingBottom:28},
+  header:{backgroundColor:'#0B1630',marginHorizontal:-14,paddingHorizontal:18,paddingTop:14,paddingBottom:16,flexDirection:'row',justifyContent:'space-between',alignItems:'center'},
   headerLeft:{flexDirection:'row',alignItems:'center',flex:1},
   logo:{width:42,height:42,borderRadius:13,backgroundColor:'#2563EB',alignItems:'center',justifyContent:'center',marginRight:10,shadowColor:'#2563EB',shadowOpacity:.3,shadowRadius:10,elevation:5},
   logoF:{fontSize:27,fontWeight:'900',color:'#fff'},
@@ -128,18 +128,18 @@ const styles = StyleSheet.create({
   searchBox:{marginTop:14,marginBottom:14,backgroundColor:'#F8FAFC',borderWidth:1,borderColor:'#D7DFEA',borderRadius:17,height:54,flexDirection:'row',alignItems:'center',paddingHorizontal:15},
   searchIcon:{fontSize:25,color:'#334155',marginRight:5},
   search:{flex:1,fontSize:14,color:COLORS.black,fontFamily:'sans-serif'},
-  hero:{marginBottom:16,borderRadius:20,padding:18,backgroundColor:'#173EA5',minHeight:155,flexDirection:'row',overflow:'hidden',shadowColor:'#0B1220',shadowOpacity:.18,shadowRadius:12,elevation:5},
+  hero:{marginBottom:18,borderRadius:22,padding:18,backgroundColor:'#173EA5',minHeight:164,flexDirection:'row',overflow:'hidden',shadowColor:'#0B1220',shadowOpacity:.18,shadowRadius:12,elevation:5},
   heroSmall:{color:'#BFDBFE',fontSize:9,fontWeight:'900',letterSpacing:1.2},
   heroTitle:{color:'#fff',fontSize:27,fontWeight:'900',marginTop:5,fontFamily:'sans-serif'},
   heroSub:{color:'#DBEAFE',fontSize:11,marginTop:4,lineHeight:16,fontFamily:'sans-serif-medium'},
   heroBtn:{alignSelf:'flex-start',backgroundColor:'#F97316',borderRadius:11,paddingHorizontal:16,paddingVertical:9,marginTop:13},
   heroBtnText:{color:'#fff',fontWeight:'900',fontSize:11},
-  heroPhones:{width:90,alignItems:'center',justifyContent:'center',transform:[{rotate:'-8deg'}]},
-  heroPhone:{width:46,height:80,borderRadius:10,backgroundColor:'#0B1220',borderWidth:2,borderColor:'#60A5FA',alignItems:'center',justifyContent:'center',transform:[{rotate:'10deg'}]},
+  heroVisual:{width:96,alignItems:'center',justifyContent:'center',transform:[{rotate:'-8deg'}]},
+  heroPhone:{width:52,height:84,borderRadius:16,backgroundColor:'#0B1220',borderWidth:2,borderColor:'#60A5FA',alignItems:'center',justifyContent:'center',transform:[{rotate:'10deg'}],shadowColor:'#60A5FA',shadowOpacity:.25,shadowRadius:10,elevation:6},
   heroPhone2:{marginLeft:-22,marginTop:24,opacity:.8},
-  heroPhoneText:{color:'#60A5FA',fontSize:27,fontWeight:'900'},
+  heroPhoneEmoji:{fontSize:30},heroPhoneSpark:{position:'absolute',right:5,top:5,color:'#F97316',fontSize:15,fontWeight:'900'},
   sectionHeader:{flexDirection:'row',justifyContent:'space-between',alignItems:'center',marginTop:2,marginBottom:9},
-  sectionTitle:{fontSize:18,fontWeight:'900',color:COLORS.black,fontFamily:'sans-serif'},
+  sectionTitle:{fontSize:19,fontWeight:'900',color:COLORS.black,fontFamily:'sans-serif'},
   seeAll:{fontSize:11,fontWeight:'900',color:COLORS.primary},
   categoryScroll:{paddingBottom:9},
   category:{width:70,alignItems:'center',marginRight:12},
@@ -165,12 +165,12 @@ const styles = StyleSheet.create({
   location:{fontSize:10,color:'#64748B',marginTop:5,fontFamily:'sans-serif-medium'},
   empty:{alignItems:'center',paddingHorizontal:30,paddingTop:46,paddingBottom:30},
   emptyLogo:{width:72,height:72,borderRadius:23,backgroundColor:'#101A2E',alignItems:'center',justifyContent:'center',shadowColor:'#0B1220',shadowOpacity:.18,shadowRadius:10,elevation:5},
-  emptyLogoText:{fontSize:42,fontWeight:'900',color:'#60A5FA'},
+  emptyLogoText:{fontSize:36},emptySpark:{position:'absolute',right:5,top:5,width:22,height:22,borderRadius:11,backgroundColor:'#F97316',alignItems:'center',justifyContent:'center'},
   emptyTitle:{fontSize:18,fontWeight:'900',color:COLORS.black,marginTop:13,fontFamily:'sans-serif'},
   emptySub:{fontSize:11,color:'#64748B',textAlign:'center',lineHeight:17,marginTop:6,fontFamily:'sans-serif-medium'},
   emptyButton:{backgroundColor:'#2563EB',borderRadius:12,paddingHorizontal:16,paddingVertical:11,marginTop:16},
   emptyButtonText:{color:'#fff',fontSize:11,fontWeight:'900'},
-  adminFab:{position:'absolute',right:16,bottom:18,backgroundColor:'#101A2E',borderRadius:24,paddingHorizontal:14,paddingVertical:10,flexDirection:'row',alignItems:'center',gap:6,elevation:5},
+  adminFab:{position:'absolute',right:16,bottom:94,backgroundColor:'#101A2E',borderRadius:24,paddingHorizontal:14,paddingVertical:10,flexDirection:'row',alignItems:'center',gap:6,elevation:5},
   adminShield:{fontSize:18},
   adminFabText:{color:'#fff',fontWeight:'900',fontSize:11}
 });
