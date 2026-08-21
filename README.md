@@ -1,5 +1,19 @@
 # FULATAN COMMUNICATION
 
+Production marketplace foundation for buying and selling phones (iPhone, Samsung, Tecno, Infinix and more).
+
+## Architecture
+- Mobile: Expo + React Native
+- Backend: Node.js + Express
+- Database: PostgreSQL on Render
+- Auth: JWT + bcrypt
+- Images: Cloudinary (recommended)
+- Admin: server-enforced role authorization
+
+See `RENDER_SETUP.md` for deployment.
+
+# FULATAN COMMUNICATION
+
 Buy · Sell · Upgrade — Expo Go mobile marketplace for phones and accessories.
 
 ## Current app design

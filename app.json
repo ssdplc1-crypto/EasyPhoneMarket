@@ -2,7 +2,7 @@
   "expo": {
     "name": "FULATAN COMMUNICATION",
     "slug": "fulatan-communication",
-    "version": "1.2.0",
+    "version": "2.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -32,6 +32,7 @@
           "cameraPermission": "Allow FULATAN COMMUNICATION to use your camera so you can take phone photos."
         }
       ]
-    ]
+    ],
+    "description": "FULATAN Communication \u2014 Buy & Sell iPhone, Samsung and other quality phones."
   }
 }
