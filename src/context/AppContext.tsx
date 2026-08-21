@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Language, t } from '../constants';
-import { CartItem, ContactSettings, User, Phone } from '../types';
-import { fetchPhones } from '../services/api';
+import { Language, t, BRANDS } from '../constants';
+import { CartItem, ContactSettings, User, Phone, Category } from '../types';
+import { fetchPhones, fetchCategories } from '../services/api';
 import { DEFAULT_CONTACT_SETTINGS, loadContactSettings } from '../services/settingsService';
 
 interface AppContextType {
@@ -12,6 +12,7 @@ interface AppContextType {
   user: User | null;
   setUser: (user: User | null) => void;
   phones: Phone[];
+  categories: Category[];
   setPhones: (phones: Phone[]) => void;
   favorites: string[];
   toggleFavorite: (phoneId: string) => void;
@@ -36,6 +37,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [language, setLanguage] = useState<Language>('ha');
   const [user, setUser] = useState<User | null>(null);
   const [phones, setPhonesState] = useState<Phone[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [contactSettings, setContactSettingsState] = useState<ContactSettings>(DEFAULT_CONTACT_SETTINGS);
@@ -43,11 +45,20 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     (async () => {
       try {
-        if (true) {
-          try { const cloudPhones = await fetchPhones(); if (cloudPhones.length) setPhonesState(cloudPhones); } catch {
-            const savedPhones = await AsyncStorage.getItem(PHONES_KEY);
-            if (savedPhones) setPhonesState(JSON.parse(savedPhones));
-          }
+        let cloudPhones: Phone[] = [];
+        try {
+          cloudPhones = await fetchPhones();
+          if (cloudPhones.length) setPhonesState(cloudPhones);
+        } catch {
+          const savedPhones = await AsyncStorage.getItem(PHONES_KEY);
+          if (savedPhones) { cloudPhones = JSON.parse(savedPhones); setPhonesState(cloudPhones); }
+        }
+        try {
+          const cloudCategories = await fetchCategories();
+          setCategories(cloudCategories);
+        } catch {
+          const names = Array.from(new Set(cloudPhones.map((p) => p.brand)));
+          setCategories(BRANDS.filter((b) => names.includes(b)).map((name) => ({ id: name, name, slug: name.toLowerCase() })));
         }
         const savedCart = await AsyncStorage.getItem(CART_KEY);
         if (savedCart) setCart(JSON.parse(savedCart));
@@ -88,7 +99,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const isAdmin = user?.role === 'admin';
 
   return (
-    <AppContext.Provider value={{ language, setLanguage, texts, user, setUser, phones, setPhones, favorites, toggleFavorite, isFavorite, cart, addToCart, removeFromCart, updateCartQty, clearCart, cartCount, cartTotal, contactSettings, setContactSettings, isAdmin }}>
+    <AppContext.Provider value={{ language, setLanguage, texts, user, setUser, phones, categories, setPhones, favorites, toggleFavorite, isFavorite, cart, addToCart, removeFromCart, updateCartQty, clearCart, cartCount, cartTotal, contactSettings, setContactSettings, isAdmin }}>
       {children}
     </AppContext.Provider>
   );
