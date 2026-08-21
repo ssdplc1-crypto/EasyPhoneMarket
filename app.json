@@ -2,7 +2,7 @@
   "expo": {
     "name": "FULATAN COMMUNICATION",
     "slug": "fulatan-communication",
-    "version": "2.0.0",
+    "version": "2.0.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -33,6 +33,6 @@
         }
       ]
     ],
-    "description": "FULATAN Communication \u2014 Buy & Sell iPhone, Samsung and other quality phones."
+    "description": "FULATAN Communication — Buy & Sell iPhone, Samsung and other quality phones."
   }
 }
