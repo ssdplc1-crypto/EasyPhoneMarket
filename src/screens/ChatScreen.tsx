@@ -14,8 +14,8 @@ import { useRoute, useNavigation, RouteProp } from '@react-navigation/native';
 import { RootStackParamList, Message } from '../types';
 import { COLORS } from '../constants';
 import { useApp } from '../context/AppContext';
-import { sendMessage, subscribeToMessages } from '../services/firebaseService';
-import { isFirebaseConfigured } from '../services/firebase';
+import { sendMessage, subscribeToMessages } from '../services/api';
+import { isApiConfigured } from '../services/api';
 
 type Route = RouteProp<RootStackParamList, 'Chat'>;
 
@@ -31,7 +31,7 @@ export default function ChatScreen() {
 
   // Mock messages for demo
   useEffect(() => {
-    if (!isFirebaseConfigured) {
+    if (!isApiConfigured) {
       setMessages([
         {
           id: 'm1',

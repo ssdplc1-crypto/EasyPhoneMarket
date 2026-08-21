@@ -3,7 +3,7 @@ import {View,Text,StyleSheet,TouchableOpacity,SafeAreaView,Alert,ScrollView} fro
 import {useNavigation} from '@react-navigation/native';
 import {COLORS} from '../constants';
 import {useApp} from '../context/AppContext';
-import {logoutUser} from '../services/firebaseService';
+import {logoutUser} from '../services/api';
 
 export default function ProfileScreen(){
  const navigation=useNavigation<any>(); const {user,setUser,isAdmin,language,setLanguage,favorites,cartCount}=useApp();

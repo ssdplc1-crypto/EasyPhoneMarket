@@ -17,7 +17,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
 import { COLORS } from '../constants';
 import { useApp } from '../context/AppContext';
-import { registerUser } from '../services/firebaseService';
+import { registerUser } from '../services/api';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 

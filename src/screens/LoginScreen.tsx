@@ -16,8 +16,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
 import { COLORS } from '../constants';
 import { useApp } from '../context/AppContext';
-import { loginUser } from '../services/firebaseService';
-import { isFirebaseConfigured } from '../services/firebase';
+import { loginUser } from '../services/api';
+import { isApiConfigured } from '../services/api';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 
@@ -64,7 +64,7 @@ export default function LoginScreen() {
           <Text style={styles.subtitle}>
             {language === 'ha' ? 'Shiga don ci gaba' : 'Login to continue'}
           </Text>
-          {!isFirebaseConfigured && <View style={styles.demo}><Text style={styles.demoTitle}>Demo Admin</Text><Text style={styles.demoText}>admin@fulatan.com • any password</Text></View>}
+          {!isApiConfigured && <View style={styles.demo}><Text style={styles.demoTitle}>Backend not connected</Text><Text style={styles.demoText}>Set EXPO_PUBLIC_API_URL to your Render API before production use.</Text></View>}
         </View>
 
         <View style={styles.form}>

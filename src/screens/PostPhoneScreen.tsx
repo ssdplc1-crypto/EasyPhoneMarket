@@ -16,7 +16,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { COLORS, BRANDS, CONDITIONS, NIGERIAN_STATES } from '../constants';
 import { useApp } from '../context/AppContext';
 import { Phone, PhoneBrand, PhoneCondition } from '../types';
-import { postPhone } from '../services/firebaseService';
+import { postPhone } from '../services/api';
 
 export default function PostPhoneScreen() {
   const navigation = useNavigation();

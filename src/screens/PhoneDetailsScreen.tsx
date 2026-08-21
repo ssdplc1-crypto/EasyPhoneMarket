@@ -6,7 +6,7 @@ import { RootStackParamList } from '../types';
 import { COLORS } from '../constants';
 import { useApp } from '../context/AppContext';
 import { formatPrice } from '../services/mockData';
-import { createOrGetChat } from '../services/firebaseService';
+import { createOrGetChat } from '../services/api';
 
 type Route=RouteProp<RootStackParamList,'PhoneDetails'>; type Nav=NativeStackNavigationProp<RootStackParamList>;
 export default function PhoneDetailsScreen(){
