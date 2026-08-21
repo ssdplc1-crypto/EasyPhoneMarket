@@ -2,8 +2,7 @@ import React, { createContext, useContext, useEffect, useState, ReactNode } from
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Language, t } from '../constants';
 import { CartItem, ContactSettings, User, Phone } from '../types';
-import { fetchPhones } from '../services/firebaseService';
-import { isFirebaseConfigured } from '../services/firebase';
+import { fetchPhones } from '../services/api';
 import { DEFAULT_CONTACT_SETTINGS, loadContactSettings } from '../services/settingsService';
 
 interface AppContextType {
@@ -44,12 +43,11 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     (async () => {
       try {
-        if (isFirebaseConfigured) {
-          const cloudPhones = await fetchPhones();
-          if (cloudPhones.length) setPhonesState(cloudPhones);
-        } else {
-          const savedPhones = await AsyncStorage.getItem(PHONES_KEY);
-          if (savedPhones) setPhonesState(JSON.parse(savedPhones));
+        if (true) {
+          try { const cloudPhones = await fetchPhones(); if (cloudPhones.length) setPhonesState(cloudPhones); } catch {
+            const savedPhones = await AsyncStorage.getItem(PHONES_KEY);
+            if (savedPhones) setPhonesState(JSON.parse(savedPhones));
+          }
         }
         const savedCart = await AsyncStorage.getItem(CART_KEY);
         if (savedCart) setCart(JSON.parse(savedCart));
