@@ -13,7 +13,7 @@ service cloud.firestore {
     }
 
     match /phones/{phoneId} {
-      allow read: if resource.data.isPublished != false || isAdmin();
+      allow read: if resource.data.isPublished == true || isAdmin();
       allow create, update, delete: if isAdmin();
     }
 
