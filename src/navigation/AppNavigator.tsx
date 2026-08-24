@@ -30,7 +30,7 @@ function TabIcon({icon,active}:{icon:string;active:boolean}) {
 function MainTabs(){
  const {texts,cartCount}=useApp();
  const insets=useSafeAreaInsets();
- return <Tab.Navigator screenOptions={{headerShown:false,tabBarActiveTintColor:COLORS.primary,tabBarInactiveTintColor:'#7B879A',tabBarStyle:[styles.tabBar,{height:72+insets.bottom,paddingBottom:8+insets.bottom}],tabBarLabelStyle:styles.label,tabBarItemStyle:styles.tabItem}}>
+ return <Tab.Navigator screenOptions={{headerShown:false,tabBarActiveTintColor:'#FF5A14',tabBarInactiveTintColor:'#777B84',tabBarStyle:[styles.tabBar,{height:72+insets.bottom,paddingBottom:8+insets.bottom}],tabBarLabelStyle:styles.label,tabBarItemStyle:styles.tabItem}}>
   <Tab.Screen name="Home" component={HomeScreen} options={{tabBarLabel:texts.home,tabBarIcon:({focused})=><TabIcon icon="⌂" active={focused}/>}}/>
   <Tab.Screen name="Categories" component={CategoriesScreen} options={{tabBarLabel:'Categories',tabBarIcon:({focused})=><TabIcon icon="▦" active={focused}/>}}/>
   <Tab.Screen name="Cart" component={CartScreen} options={{tabBarLabel:'Cart',tabBarBadge:cartCount||undefined,tabBarIcon:({focused})=><TabIcon icon="🛒" active={focused}/>}}/>
@@ -42,7 +42,7 @@ function MainTabs(){
 export default function AppNavigator(){return <SafeAreaProvider><NavigationContainer><Stack.Navigator screenOptions={{headerShown:false,contentStyle:{backgroundColor:COLORS.background}}}><Stack.Screen name="MainTabs" component={MainTabs}/><Stack.Screen name="Login" component={LoginScreen}/><Stack.Screen name="Register" component={RegisterScreen}/><Stack.Screen name="PhoneDetails" component={PhoneDetailsScreen}/><Stack.Screen name="PostPhone" component={PostPhoneScreen}/><Stack.Screen name="Chat" component={ChatScreen}/><Stack.Screen name="AdminDashboard" component={AdminDashboardScreen}/><Stack.Screen name="Categories" component={CategoriesScreen}/><Stack.Screen name="Cart" component={CartScreen}/><Stack.Screen name="Checkout" component={CheckoutScreen}/></Stack.Navigator></NavigationContainer></SafeAreaProvider>}
 
 const styles={
- tabBar:{marginHorizontal:10,marginBottom:8,paddingTop:7,borderTopWidth:1,borderTopColor:'#E7ECF3',borderRadius:22,backgroundColor:'#FFFFFF',elevation:14,shadowColor:'#071225',shadowOpacity:.12,shadowRadius:16,shadowOffset:{width:0,height:-3}},
+ tabBar:{marginHorizontal:10,marginBottom:8,paddingTop:7,borderTopWidth:1,borderTopColor:'#2B2E35',borderRadius:22,backgroundColor:'#101216',elevation:14,shadowColor:'#000000',shadowOpacity:.12,shadowRadius:16,shadowOffset:{width:0,height:-3}},
  tabItem:{borderRadius:18,marginHorizontal:2}, label:{fontSize:9,fontWeight:'900' as const,marginTop:1},
- iconWrap:{width:40,height:32,borderRadius:12,alignItems:'center' as const,justifyContent:'center' as const},iconWrapActive:{backgroundColor:'#EAF1FF'},icon:{fontSize:19,color:'#64748B',fontWeight:'900' as const},iconActive:{color:COLORS.primary,fontSize:20}
+ iconWrap:{width:40,height:32,borderRadius:12,alignItems:'center' as const,justifyContent:'center' as const},iconWrapActive:{backgroundColor:'#2A160D'},icon:{fontSize:19,color:'#777B84',fontWeight:'900' as const},iconActive:{color:'#FF5A14',fontSize:20}
 };
