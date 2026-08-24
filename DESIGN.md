@@ -18,3 +18,9 @@ The app follows the supplied FULATAN reference: blue primary branding, orange ac
 - Security: admin-only UI plus server-side Firebase claim/rules.
 
 The reference image is treated as a design direction, not a source of copyrighted assets.
+
+## Brand launch & app icon
+- App icon uses the FULATAN phone/F mark with a premium black and orange treatment.
+- Native splash uses the full FULATAN COMMUNICATION mark on a dark background.
+- The in-app launch animation uses a staged logo reveal, expanding orange rings, a moving highlight, progress bar and a short marketplace loading message.
+- The app icon is configured for iOS/Android and the web favicon; Android adaptive icon assets use the same brand mark.
