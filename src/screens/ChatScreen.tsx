@@ -15,7 +15,6 @@ import { RootStackParamList, Message } from '../types';
 import { COLORS } from '../constants';
 import { useApp } from '../context/AppContext';
 import { sendMessage, subscribeToMessages } from '../services/api';
-import { isApiConfigured } from '../services/api';
 
 type Route = RouteProp<RootStackParamList, 'Chat'>;
 
@@ -29,56 +28,18 @@ export default function ChatScreen() {
   const [text, setText] = useState('');
   const flatListRef = useRef<FlatList>(null);
 
-  // Mock messages for demo
-  useEffect(() => {
-    if (!isApiConfigured) {
-      setMessages([
-        {
-          id: 'm1',
-          chatId,
-          senderId: 'other',
-          text: language === 'ha' ? 'Sannu, wayar tana nan' : 'Hello, the phone is available',
-          createdAt: new Date(Date.now() - 3600000).toISOString(),
-          read: true,
-        },
-        {
-          id: 'm2',
-          chatId,
-          senderId: user?.id || 'me',
-          text: language === 'ha' ? 'Yaya farashin?' : 'What is the final price?',
-          createdAt: new Date(Date.now() - 1800000).toISOString(),
-          read: true,
-        },
-      ]);
-      return;
-    }
-
-    const unsubscribe = subscribeToMessages(chatId, setMessages);
-    return unsubscribe;
-  }, [chatId]);
+  useEffect(() => subscribeToMessages(chatId, setMessages), [chatId]);
 
   const handleSend = async () => {
     if (!text.trim() || !user) return;
 
-    const newMsg: Message = {
-      id: 'm_' + Date.now(),
-      chatId,
-      senderId: user.id,
-      text: text.trim(),
-      createdAt: new Date().toISOString(),
-      read: false,
-    };
-
-    setMessages((prev) => [...prev, newMsg]);
-    setText('');
-
     try {
       await sendMessage(chatId, user.id, text.trim());
+      setText('');
+      setTimeout(() => flatListRef.current?.scrollToEnd(), 100);
     } catch (e) {
-      console.log('Send error (mock mode ok)', e);
+      // Keep the message unsent if the real API rejects it.
     }
-
-    setTimeout(() => flatListRef.current?.scrollToEnd(), 100);
   };
 
   const renderMessage = ({ item }: { item: Message }) => {
@@ -148,7 +109,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: COLORS.white,
+    backgroundColor: '#101216',
     paddingHorizontal: 12,
     paddingVertical: 12,
     borderBottomWidth: 1,
@@ -162,15 +123,15 @@ const styles = StyleSheet.create({
   },
   backText: {
     fontSize: 24,
-    color: COLORS.black,
+    color: '#FFFFFF',
   },
   headerName: {
     fontSize: 16,
     fontWeight: '700',
-    color: COLORS.black,
+    color: '#FFFFFF',
   },
   online: { fontSize: 11, color: '#16A34A', marginTop: 2 },
-  adminAvatar: { width: 40, height: 40, borderRadius: 12, backgroundColor: '#EFF6FF', alignItems: 'center', justifyContent: 'center', marginRight: 9 },
+  adminAvatar: { width: 40, height: 40, borderRadius: 12, backgroundColor: '#17191E', alignItems: 'center', justifyContent: 'center', marginRight: 9 },
   adminAvatarText: { fontSize: 22, fontWeight: '900', color: COLORS.primary },
   messages: {
     padding: 16,
@@ -189,12 +150,12 @@ const styles = StyleSheet.create({
   },
   otherBubble: {
     alignSelf: 'flex-start',
-    backgroundColor: COLORS.white,
+    backgroundColor: '#101216',
     borderBottomLeftRadius: 4,
   },
   msgText: {
     fontSize: 15,
-    color: COLORS.black,
+    color: '#FFFFFF',
     lineHeight: 20,
   },
   myMsgText: {
@@ -213,7 +174,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-end',
     padding: 12,
-    backgroundColor: COLORS.white,
+    backgroundColor: '#101216',
     borderTopWidth: 1,
     borderTopColor: COLORS.border,
   },
@@ -225,7 +186,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     fontSize: 15,
     maxHeight: 100,
-    color: COLORS.black,
+    color: '#FFFFFF',
   },
   sendBtn: {
     width: 44,

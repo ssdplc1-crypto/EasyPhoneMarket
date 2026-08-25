@@ -6,5 +6,5 @@ function auth(req,res,next){ try { const h=req.headers.authorization||''; if(!h.
 function admin(req,res,next){ if(req.user?.role!=='admin') return res.status(403).json({message:'Admin access required'}); next(); }
 async function hashPassword(password){ return bcrypt.hash(password,12); }
 async function comparePassword(password,hash){ return bcrypt.compare(password,hash); }
-async function publicUser(row){ return { id:row.id,name:row.name,email:row.email,phone:row.phone,avatar:row.avatar,location:row.location,rating:Number(row.rating||5),totalSales:Number(row.total_sales||0),joinedAt:new Date(row.created_at).toISOString().split('T')[0],role:row.role }; }
+async function publicUser(row){ return { id:row.id,name:row.name,email:row.email,phone:row.phone,avatar:row.avatar,location:row.location,rating:Number(row.rating||5),totalSales:Number(row.total_sales||0),joinedAt:new Date(row.created_at).toISOString().split('T')[0],role:row.role,referralCode:row.referral_code||null,referralBalance:Number(row.referral_balance||0),referredBy:row.referred_by||null }; }
 module.exports={signToken,auth,admin,hashPassword,comparePassword,publicUser};

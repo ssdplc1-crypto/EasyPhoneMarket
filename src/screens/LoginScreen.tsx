@@ -17,7 +17,7 @@ import { RootStackParamList } from '../types';
 import { COLORS } from '../constants';
 import { useApp } from '../context/AppContext';
 import { loginUser } from '../services/api';
-import { isApiConfigured } from '../services/api';
+import FulatanLogo from '../components/FulatanLogo';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 
@@ -41,11 +41,7 @@ export default function LoginScreen() {
     try {
       const user = await loginUser(emailOrPhone, password);
       setUser(user);
-      if (user.role === 'admin') {
-        navigation.replace('AdminDashboard');
-      } else {
-        navigation.replace('MainTabs');
-      }
+      navigation.replace(user.role === 'admin' ? 'AdminTabs' : 'MainTabs');
     } catch (e: any) {
       Alert.alert(
         language === 'ha' ? 'Kuskure' : 'Login failed',
@@ -63,12 +59,11 @@ export default function LoginScreen() {
         style={styles.inner}
       >
         <View style={styles.header}>
-          <View style={styles.logoBox}><Text style={styles.logoF}>F</Text><View style={styles.logoDot}/></View>
+          <FulatanLogo width={150} height={108} />
           <Text style={styles.title}>FULATAN COMMUNICATION</Text>
           <Text style={styles.subtitle}>
             {language === 'ha' ? 'Shiga don ci gaba' : 'Login to continue'}
           </Text>
-          {!isApiConfigured && <View style={styles.demo}><Text style={styles.demoTitle}>Backend not connected</Text><Text style={styles.demoText}>Set EXPO_PUBLIC_API_URL to your Render API before production use.</Text></View>}
         </View>
 
         <View style={styles.form}>
@@ -119,14 +114,7 @@ export default function LoginScreen() {
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.skip}
-            onPress={() => navigation.replace('MainTabs')}
-          >
-            <Text style={styles.skipText}>
-              {language === 'ha' ? 'Ci gaba ba tare da shiga ba' : 'Continue as Guest'}
-            </Text>
-          </TouchableOpacity>
+
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -143,21 +131,15 @@ const styles = StyleSheet.create({
     padding: 24,
     justifyContent: 'center',
   },
-  header: {
-    alignItems: 'center',
-    marginBottom: 40,
-  },
+  header: { alignItems: 'center', marginBottom: 28 },
   logoBox: { width: 86, height: 86, borderRadius: 26, backgroundColor: COLORS.navy, alignItems: 'center', justifyContent: 'center', marginBottom: 14, shadowColor: COLORS.primary, shadowOpacity: .22, shadowRadius: 16, elevation: 7 },
   logoF: { fontSize: 56, fontWeight: '900', color: '#60A5FA' },
   logoDot: { position: 'absolute', right: 9, bottom: 9, width: 11, height: 11, borderRadius: 6, backgroundColor: COLORS.accent },
   title: {
-    fontSize: 26,
-    fontWeight: '800',
-    color: COLORS.black,
+    fontSize: 18,
+    fontWeight: '900',
+    color: '#FFFFFF',
   },
-  demo: { backgroundColor: '#EAF1FF', borderRadius: 12, paddingHorizontal: 12, paddingVertical: 8, marginTop: 12, borderWidth: 1, borderColor: '#C6D6FF' },
-  demoTitle: { fontSize: 10, color: COLORS.primary, fontWeight: '900', textAlign: 'center' },
-  demoText: { fontSize: 9, color: COLORS.gray, fontWeight: '700', marginTop: 2 },
   subtitle: {
     fontSize: 15,
     color: COLORS.gray,
@@ -169,11 +151,11 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: '600',
-    color: COLORS.black,
+    color: '#FFFFFF',
     marginBottom: 6,
   },
   input: {
-    backgroundColor: COLORS.white,
+    backgroundColor: '#101216',
     borderRadius: 15,
     paddingHorizontal: 16,
     paddingVertical: 14,
@@ -182,7 +164,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.border,
     fontWeight: '700',
-    color: COLORS.black,
+    color: '#FFFFFF',
   },
   button: {
     backgroundColor: COLORS.primary,

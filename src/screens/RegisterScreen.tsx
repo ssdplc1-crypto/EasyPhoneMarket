@@ -18,20 +18,23 @@ import { RootStackParamList } from '../types';
 import { COLORS } from '../constants';
 import { useApp } from '../context/AppContext';
 import { registerUser } from '../services/api';
+import FulatanLogo from '../components/FulatanLogo';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 
 export default function RegisterScreen() {
   const navigation = useNavigation<Nav>();
-  const { setUser, texts, language } = useApp();
+  const { texts, language } = useApp();
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [referralCode, setReferralCode] = useState('');
   const [loading, setLoading] = useState(false);
+  const [otpChannel, setOtpChannel] = useState<'email'|'sms'>('email');
 
   const handleRegister = async () => {
-    if (!name || !phone || phone.length < 10 || !password) {
+    if (!name || !email || !phone || phone.length < 10 || !password) {
       Alert.alert(
         language === 'ha' ? 'Kuskure' : 'Error',
         language === 'ha'
@@ -43,26 +46,10 @@ export default function RegisterScreen() {
 
     setLoading(true);
     try {
-      const user = await registerUser(
-        name,
-        email || `${phone}@phone.local`,
-        phone,
-        password
-      );
-      setUser(user);
-      navigation.replace('MainTabs');
+      const result = await registerUser(name,email,phone,password,referralCode,otpChannel);
+      navigation.navigate('VerifyOtp',{verificationId:result.verificationId,destination:result.destination,channel:result.channel});
     } catch (e: any) {
-      // Even if Firebase fails, allow mock registration
-      setUser({
-        id: 'u_' + Date.now(),
-        name,
-        email: email || '',
-        phone,
-        joinedAt: new Date().toISOString().split('T')[0],
-        rating: 5,
-        totalSales: 0,
-      });
-      navigation.replace('MainTabs');
+      Alert.alert(language === 'ha' ? 'An kasa yin rajista' : 'Registration failed', e?.message || 'Could not create account.');
     } finally {
       setLoading(false);
     }
@@ -76,14 +63,14 @@ export default function RegisterScreen() {
       >
         <ScrollView contentContainerStyle={styles.inner}>
           <View style={styles.header}>
-            <Text style={styles.logo}>📱</Text>
+            <FulatanLogo width={135} height={100} />
             <Text style={styles.title}>
               {language === 'ha' ? 'Yi Rajista' : 'Create Account'}
             </Text>
             <Text style={styles.subtitle}>
               {language === 'ha'
-                ? 'Shiga Easy Phone Market'
-                : 'Join Easy Phone Market'}
+                ? 'Shiga FULATAN COMMUNICATION'
+                : 'Join FULATAN COMMUNICATION'}
             </Text>
           </View>
 
@@ -111,7 +98,7 @@ export default function RegisterScreen() {
               onChangeText={setPhone}
             />
 
-            <Text style={styles.label}>Email (optional)</Text>
+            <Text style={styles.label}>Email *</Text>
             <TextInput
               style={styles.input}
               placeholder="you@email.com"
@@ -121,6 +108,12 @@ export default function RegisterScreen() {
               value={email}
               onChangeText={setEmail}
             />
+
+            <Text style={styles.label}>{language === 'ha' ? 'Hanyar karɓar OTP' : 'OTP verification method'} *</Text>
+            <View style={styles.otpRow}><TouchableOpacity style={[styles.otpChoice,otpChannel==='email'&&styles.otpActive]} onPress={()=>setOtpChannel('email')}><Text style={styles.otpText}>📧 Email</Text></TouchableOpacity><TouchableOpacity style={[styles.otpChoice,otpChannel==='sms'&&styles.otpActive]} onPress={()=>setOtpChannel('sms')}><Text style={styles.otpText}>📱 SMS</Text></TouchableOpacity></View>
+
+            <Text style={styles.label}>Referral Code ({language === 'ha' ? 'idan kana da shi' : 'optional'})</Text>
+            <TextInput style={styles.input} placeholder={language === 'ha' ? 'Misali: AHMAD-7K2P9Q' : 'e.g. AHMAD-7K2P9Q'} placeholderTextColor={COLORS.gray} autoCapitalize="characters" value={referralCode} onChangeText={setReferralCode}/>
 
             <Text style={styles.label}>
               {language === 'ha' ? 'Kalmar sirri' : 'Password'} *
@@ -182,9 +175,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   title: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: '800',
-    color: COLORS.black,
+    color: '#FFFFFF',
   },
   subtitle: {
     fontSize: 14,
@@ -197,7 +190,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: '600',
-    color: COLORS.black,
+    color: '#FFFFFF',
     marginBottom: 6,
   },
   input: {
@@ -209,7 +202,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     borderWidth: 1,
     borderColor: COLORS.border,
-    color: COLORS.black,
+    color: '#FFFFFF',
   },
   button: {
     backgroundColor: COLORS.primary,
@@ -227,6 +220,10 @@ const styles = StyleSheet.create({
     marginTop: 20,
     alignItems: 'center',
   },
+  otpRow: { flexDirection: 'row', gap: 10, marginBottom: 16 },
+  otpChoice: { flex: 1, paddingVertical: 13, borderRadius: 12, borderWidth: 1, borderColor: COLORS.border, alignItems: 'center', backgroundColor: COLORS.card },
+  otpActive: { borderColor: COLORS.primary, backgroundColor: COLORS.softOrange },
+  otpText: { color: '#FFFFFF', fontWeight: '800' },
   linkText: {
     color: COLORS.primary,
     fontSize: 14,

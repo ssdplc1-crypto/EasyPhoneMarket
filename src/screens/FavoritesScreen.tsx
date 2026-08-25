@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 22,
     fontWeight: '800',
-    color: COLORS.black,
+    color: '#FFFFFF',
   },
   count: {
     fontSize: 13,

@@ -31,6 +31,8 @@ export interface Phone {
   isFavorite?: boolean;
   views?: number;
   isPublished?: boolean;
+  commissionType?: 'fixed' | 'percent';
+  commissionValue?: number;
 }
 
 export interface User {
@@ -44,6 +46,9 @@ export interface User {
   totalSales?: number;
   joinedAt: string;
   role?: UserRole;
+  referralCode?: string | null;
+  referralBalance?: number;
+  referredBy?: string | null;
 }
 
 export interface CartItem {
@@ -85,6 +90,7 @@ export type RootStackParamList = {
   MainTabs: undefined;
   Login: undefined;
   Register: undefined;
+  VerifyOtp: { verificationId: string; destination: string; channel: 'email' | 'sms' };
   PhoneDetails: { phoneId: string };
   PostPhone: undefined;
   EditProfile: undefined;
@@ -96,8 +102,10 @@ export type RootStackParamList = {
   Cart: undefined;
   Checkout: undefined;
   Orders: undefined;
-  AdminDashboard: undefined;
+  AdminTabs: undefined;
 };
+
+export type AdminTabParamList = { Dashboard: undefined; AddPhone: undefined; Orders: undefined; Settings: undefined; };
 
 export type MainTabParamList = {
   Home: undefined;

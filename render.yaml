@@ -17,6 +17,22 @@ services:
         sync: false
       - key: CORS_ORIGIN
         value: "*"
+      - key: FLW_SECRET_KEY
+        sync: false
+      - key: FLW_REDIRECT_URL
+        sync: false
+      - key: FLW_WEBHOOK_HASH
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: RESEND_FROM_EMAIL
+        sync: false
+      - key: TERMII_API_KEY
+        sync: false
+      - key: TERMII_SENDER_ID
+        sync: false
+      - key: TERMII_CHANNEL
+        value: generic
       - key: CLOUDINARY_CLOUD_NAME
         sync: false
       - key: CLOUDINARY_API_KEY

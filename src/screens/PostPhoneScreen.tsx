@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -10,6 +10,7 @@ import {
   Alert,
   Image,
   ActivityIndicator,
+  BackHandler,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
@@ -31,19 +32,13 @@ export default function PostPhoneScreen() {
   const [location, setLocation] = useState('');
   const [state, setState] = useState('Kano');
   const [images, setImages] = useState<string[]>([]);
+  const [commissionType, setCommissionType] = useState<'fixed'|'percent'>('fixed');
+  const [commissionValue, setCommissionValue] = useState('0');
   const [loading, setLoading] = useState(false);
 
-  if (!user || !isAdmin) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 }}>
-          <Text style={{ fontSize: 46 }}>🔐</Text>
-          <Text style={{ fontSize: 23, fontWeight: '900', color: COLORS.black, marginTop: 12 }}>Admin Only</Text>
-          <Text style={{ color: COLORS.gray, textAlign: 'center', marginTop: 8, lineHeight: 19 }}>Admin ne kawai zai iya saka ko sarrafa wayoyi. Customers ba za su iya saka waya ba.</Text>
-        </View>
-      </SafeAreaView>
-    );
-  }
+  useEffect(() => { if (!user || !isAdmin) navigation.goBack(); }, [user, isAdmin, navigation]);
+  useEffect(() => { const sub = BackHandler.addEventListener('hardwareBackPress', () => { (navigation as any).navigate('Dashboard'); return true; }); return () => sub.remove(); }, [navigation]);
+  if (!user || !isAdmin) return null;
 
   const pickImages = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -96,7 +91,9 @@ export default function PostPhoneScreen() {
   };
 
   const handleSubmit = async () => {
-    if (!title || !model || !price || !location) {
+    const normalizedPrice = Number(price.replace(/,/g, '').replace(/₦/g, '').trim());
+    const normalizedCommission = Number(commissionValue.replace(/,/g, '').replace(/₦/g, '').replace('%', '').trim() || '0');
+    if (!title || !model || !price || !location || !Number.isFinite(normalizedPrice)) {
       Alert.alert(
         language === 'ha' ? 'Kuskure' : 'Error',
         language === 'ha'
@@ -123,7 +120,9 @@ export default function PostPhoneScreen() {
           title,
           brand,
           model,
-          price: Number(price),
+          price: normalizedPrice,
+          commissionType,
+          commissionValue: Number.isFinite(normalizedCommission) ? normalizedCommission : 0,
           condition,
           description,
           images: [],
@@ -144,7 +143,7 @@ export default function PostPhoneScreen() {
         language === 'ha'
           ? 'An saka wayar a FULATAN cikin nasara.'
           : 'Phone published successfully.',
-        [{ text: 'OK', onPress: () => navigation.goBack() }]
+        [{ text: 'OK', onPress: () => (navigation as any).navigate('Dashboard') }]
       );
     } catch (e: any) {
       Alert.alert('Error', e.message || 'Failed to post');
@@ -156,7 +155,7 @@ export default function PostPhoneScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
-        <View style={styles.titleRow}><View><Text style={styles.kicker}>FULATAN ADMIN</Text><Text style={styles.pageTitle}>{texts.postPhone}</Text></View><View style={styles.secure}><Text style={styles.secureText}>SECURE</Text></View></View><View style={styles.notice}><Text style={styles.noticeTitle}>🛡 Admin Publishing</Text><Text style={styles.noticeText}>{language==='ha'?'Wayar da ka saka za ta bayyana ga customers ne kawai bayan Admin ya wallafa ta.':'Only the FULATAN Admin can publish phones for customers to see.'}</Text></View>
+        <View style={styles.titleRow}><View><Text style={styles.pageTitle}>{texts.postPhone}</Text><Text style={styles.pageSub}>{language==='ha'?'Cika bayanan wayar da kyau':'Add a phone to the marketplace'}</Text></View></View>
 
         {/* Image Picker */}
         <Text style={styles.label}>{texts.uploadPhotos}</Text>
@@ -231,6 +230,13 @@ export default function PostPhoneScreen() {
           onChangeText={setPrice}
         />
 
+        <Text style={styles.label}>{language === 'ha' ? 'Referral Commission' : 'Referral Commission'}</Text>
+        <View style={styles.chipsRow}>
+          <TouchableOpacity style={[styles.chip, commissionType === 'fixed' && styles.chipActive]} onPress={() => setCommissionType('fixed')}><Text style={[styles.chipText, commissionType === 'fixed' && styles.chipTextActive]}>₦ Fixed</Text></TouchableOpacity>
+          <TouchableOpacity style={[styles.chip, commissionType === 'percent' && styles.chipActive]} onPress={() => setCommissionType('percent')}><Text style={[styles.chipText, commissionType === 'percent' && styles.chipTextActive]}>% Percent</Text></TouchableOpacity>
+        </View>
+        <TextInput style={styles.input} placeholder={commissionType === 'fixed' ? 'e.g. 5000' : 'e.g. 2'} placeholderTextColor={COLORS.gray} keyboardType="numeric" value={commissionValue} onChangeText={setCommissionValue}/>
+
         <Text style={styles.label}>{texts.condition}</Text>
         <View style={styles.chipsRow}>
           {CONDITIONS.map((c) => (
@@ -257,7 +263,7 @@ export default function PostPhoneScreen() {
 
         <Text style={styles.label}>State</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chips}>
-          {NIGERIAN_STATES.slice(0, 15).map((s) => (
+          {NIGERIAN_STATES.map((s) => (
             <TouchableOpacity
               key={s}
               style={[styles.chip, state === s && styles.chipActive]}
@@ -304,7 +310,7 @@ export default function PostPhoneScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.white,
+    backgroundColor: '#070809',
   },
   content: {
     padding: 20,
@@ -314,31 +320,32 @@ const styles = StyleSheet.create({
   kicker: { fontSize: 9, color: COLORS.primary, fontWeight: '900', letterSpacing: 2, marginBottom: 3 },
   secure: { backgroundColor: '#DCFCE7', paddingHorizontal: 10, paddingVertical: 7, borderRadius: 12 },
   secureText: { color: '#166534', fontSize: 8, fontWeight: '900' },
-  notice: { backgroundColor: '#EAF1FF', borderWidth: 1, borderColor: '#C6D6FF', borderRadius: 15, padding: 12, marginBottom: 8 },
+  notice: { backgroundColor: '#17120F', borderWidth: 1, borderColor: '#4A2B1E', borderRadius: 15, padding: 12, marginBottom: 8 },
   noticeTitle: { fontSize: 12, fontWeight: '900', color: COLORS.primary },
-  noticeText: { fontSize: 10, color: COLORS.gray, lineHeight: 16, marginTop: 4, fontWeight: '600' },
+  noticeText: { fontSize: 10, color: '#A1A1AA', lineHeight: 16, marginTop: 4, fontWeight: '600' },
+  pageSub: { fontSize: 10, color: '#8F939B', marginTop: -15, marginBottom: 18 },
   pageTitle: {
     fontSize: 22,
     fontWeight: '900',
-    color: COLORS.black,
+    color: '#FFFFFF',
     marginBottom: 20,
   },
   label: {
     fontSize: 14,
     fontWeight: '600',
-    color: COLORS.black,
+    color: '#FFFFFF',
     marginBottom: 8,
     marginTop: 12,
   },
   input: {
-    backgroundColor: COLORS.background,
+    backgroundColor: '#101216',
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 14,
     fontSize: 15,
     borderWidth: 1,
     borderColor: COLORS.border,
-    color: COLORS.black,
+    color: '#FFFFFF',
   },
   textArea: {
     height: 100,
@@ -356,7 +363,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderRadius: 20,
-    backgroundColor: COLORS.background,
+    backgroundColor: '#101216',
     marginRight: 8,
     marginBottom: 8,
     borderWidth: 1,
@@ -417,7 +424,7 @@ const styles = StyleSheet.create({
     borderStyle: 'dashed',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: COLORS.background,
+    backgroundColor: '#101216',
   },
   addImageText: {
     fontSize: 24,

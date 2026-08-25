@@ -2,10 +2,10 @@
   "expo": {
     "name": "FULATAN COMMUNICATION",
     "slug": "fulatan-communication",
-    "version": "2.0.3",
+    "version": "2.0.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "dark",
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.fulatan.communication"
@@ -33,11 +33,6 @@
         }
       ]
     ],
-    "description": "FULATAN Communication \u2014 Buy & Sell Quality Phones. Trusted Deals, Fast Delivery, Warranty and 24/7 Support.",
-    "splash": {
-      "image": "./assets/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#070809"
-    }
+    "description": "FULATAN Communication \u2014 Buy & Sell iPhone, Samsung and other quality phones."
   }
 }
